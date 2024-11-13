@@ -1,0 +1,88 @@
+-- Criar a tabela EMPREGADO
+CREATE TABLE EMPREGADO (
+    RG VARCHAR2(10) PRIMARY KEY,
+    Nome VARCHAR2(100),
+    Depto NUMBER,
+    Supervisor_RG VARCHAR2(10),
+    Salario NUMBER
+);
+
+-- Inserir os dados na tabela EMPREGADO
+INSERT INTO EMPREGADO (RG, Nome, Depto, Supervisor_RG, Salario) VALUES ('10101010', 'João Luiz', 1, NULL, 3000.00);
+INSERT INTO EMPREGADO (RG, Nome, Depto, Supervisor_RG, Salario) VALUES ('20202020', 'Fernando', 2, '10101010', 2500.00);
+INSERT INTO EMPREGADO (RG, Nome, Depto, Supervisor_RG, Salario) VALUES ('30303030', 'Ricardo', 2, '10101010', 2300.00);
+INSERT INTO EMPREGADO (RG, Nome, Depto, Supervisor_RG, Salario) VALUES ('40404040', 'Jorge', 2, '20202020', 4200.00);
+INSERT INTO EMPREGADO (RG, Nome, Depto, Supervisor_RG, Salario) VALUES ('50505050', 'Renato', 3, '20202020', 1300.00);
+
+-- Criar a tabela DEPARTAMENTO
+CREATE TABLE DEPARTAMENTO (
+    Numero NUMBER PRIMARY KEY,
+    Nome VARCHAR2(100)
+);
+
+-- Inserir os dados na tabela DEPARTAMENTO
+INSERT INTO DEPARTAMENTO (Numero, Nome) VALUES (1, 'Contabilidade');
+INSERT INTO DEPARTAMENTO (Numero, Nome) VALUES (2, 'Engenharia Civil');
+INSERT INTO DEPARTAMENTO (Numero, Nome) VALUES (3, 'Engenharia Mecânica');
+
+-- Criar a tabela PROJETO
+CREATE TABLE PROJETO (
+    Numero NUMBER PRIMARY KEY,
+    Nome VARCHAR2(100),
+    Localizacao VARCHAR2(100)
+);
+
+-- Inserir os dados na tabela PROJETO
+INSERT INTO PROJETO (Numero, Nome, Localizacao) VALUES (1, 'Financeiro', 'São Paulo');
+INSERT INTO PROJETO (Numero, Nome, Localizacao) VALUES (3, 'Motor', 'Rio Claro');
+INSERT INTO PROJETO (Numero, Nome, Localizacao) VALUES (20, 'Prédio Central', 'Campinas');
+
+-- Criar a tabela DEPENDENTES
+CREATE TABLE DEPENDENTES (
+    RG VARCHAR2(10),
+    Nome VARCHAR2(100),
+    Dependente VARCHAR2(100),
+    Nascimento DATE,
+    Relacao VARCHAR2(50),
+    Sexo VARCHAR2(10),
+    PRIMARY KEY (RG, Dependente)
+);
+
+-- Inserir os dados na tabela DEPENDENTES
+INSERT INTO DEPENDENTES (RG, Nome, Dependente, Nascimento, Relacao, Sexo) VALUES ('10101010', 'Jorge', 'Filho', TO_DATE('27/12/1986', 'DD/MM/YYYY'), 'Filho', 'Masculino');
+INSERT INTO DEPENDENTES (RG, Nome, Dependente, Nascimento, Relacao, Sexo) VALUES ('10101010', 'Luiz', 'Filho', TO_DATE('18/11/1979', 'DD/MM/YYYY'), 'Filho', 'Masculino');
+INSERT INTO DEPENDENTES (RG, Nome, Dependente, Nascimento, Relacao, Sexo) VALUES ('20202020', 'Fernanda', 'Cônjuge', TO_DATE('14/02/1969', 'DD/MM/YYYY'), 'Cônjuge', 'Feminino');
+INSERT INTO DEPENDENTES (RG, Nome, Dependente, Nascimento, Relacao, Sexo) VALUES ('20202020', 'Ângelo', 'Filho', TO_DATE('10/02/1995', 'DD/MM/YYYY'), 'Filho', 'Masculino');
+INSERT INTO DEPENDENTES (RG, Nome, Dependente, Nascimento, Relacao, Sexo) VALUES ('30303030', 'Adreia', 'Filho', TO_DATE('01/05/1990', 'DD/MM/YYYY'), 'Filho', 'Feminino');
+
+-- Criar a tabela DEPARTAMENTO_PROJETO
+CREATE TABLE DEPARTAMENTO_PROJETO (
+    Depto NUMBER,
+    Projeto NUMBER,
+    PRIMARY KEY (Depto, Projeto),
+    FOREIGN KEY (Depto) REFERENCES DEPARTAMENTO (Numero),
+    FOREIGN KEY (Projeto) REFERENCES PROJETO (Numero)
+);
+
+-- Inserir os dados na tabela DEPARTAMENTO_PROJETO
+INSERT INTO DEPARTAMENTO_PROJETO (Depto, Projeto) VALUES (2, 5);
+INSERT INTO DEPARTAMENTO_PROJETO (Depto, Projeto) VALUES (3, 10);
+INSERT INTO DEPARTAMENTO_PROJETO (Depto, Projeto) VALUES (2, 20);
+
+-- Criar a tabela EMPREGADO_PROJETO
+CREATE TABLE EMPREGADO_PROJETO (
+    RGEmpregado VARCHAR2(10),
+    Numero_Projeto NUMBER,
+    Horas NUMBER,
+    PRIMARY KEY (RGEmpregado, Numero_Projeto),
+    FOREIGN KEY (RGEmpregado) REFERENCES EMPREGADO (RG),
+    FOREIGN KEY (Numero_Projeto) REFERENCES PROJETO (Numero)
+);
+
+-- Inserir os dados na tabela EMPREGADO_PROJETO
+INSERT INTO EMPREGADO_PROJETO (RGEmpregado, Numero_Projeto, Horas) VALUES ('20202020', 5, 10);
+INSERT INTO EMPREGADO_PROJETO (RGEmpregado, Numero_Projeto, Horas) VALUES ('20202020', 10, 25);
+INSERT INTO EMPREGADO_PROJETO (RGEmpregado, Numero_Projeto, Horas) VALUES ('30303030', 5, 35);
+INSERT INTO EMPREGADO_PROJETO (RGEmpregado, Numero_Projeto, Horas) VALUES ('30303030', 20, 50);
+INSERT INTO EMPREGADO_PROJETO (RGEmpregado, Numero_Projeto, Horas) VALUES ('50505050', 20, 35);
+
