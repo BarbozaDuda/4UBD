@@ -1,0 +1,92 @@
+CREATE TABLE Login (
+    ID_log NUMBER PRIMARY KEY,
+    Usuario VARCHAR2(50) NOT NULL,
+    Senha VARCHAR2(100) NOT NULL,
+    Acesso VARCHAR2(20) NOT NULL,
+    Funcionario_ID_func NUMBER,
+    CONSTRAINT fk_funcionario_login FOREIGN KEY (Funcionario_ID_func) REFERENCES Funcionario(ID_func)
+);
+
+CREATE TABLE Funcionario (
+    ID_func NUMBER PRIMARY KEY,
+    Nome VARCHAR2(100) NOT NULL,
+    Setor VARCHAR2(50),
+    Telefone VARCHAR2(20),
+    Data_nascimento DATE,
+    Data_entrada DATE,
+    Data_saida DATE,
+    Salario NUMBER(10, 2),
+    Horario_trabalho VARCHAR2(50)
+);
+
+CREATE TABLE Cliente (
+    ID_cli NUMBER PRIMARY KEY,
+    Nome VARCHAR2(100) NOT NULL,
+    CPF VARCHAR2(11) UNIQUE NOT NULL,
+    Endereco VARCHAR2(200),
+    Telefone VARCHAR2(20),
+    Email VARCHAR2(100),
+    Estado VARCHAR2(2)
+);
+
+CREATE TABLE Reserva (
+    ID_res NUMBER PRIMARY KEY,
+    Cliente_ID_cli NUMBER,
+    Quarto_ID_qua NUMBER,
+    Inicio_estadia DATE,
+    Fim_estadia DATE,
+    CONSTRAINT fk_cliente_reserva FOREIGN KEY (Cliente_ID_cli) REFERENCES Cliente(ID_cli),
+    CONSTRAINT fk_quarto_reserva FOREIGN KEY (Quarto_ID_qua) REFERENCES Quarto(ID_qua)
+);
+
+CREATE TABLE Quarto (
+    ID_qua NUMBER PRIMARY KEY,
+    Tipo VARCHAR2(50),
+    Preco NUMBER(10, 2),
+    Descricao VARCHAR2(255),
+    Numero_quarto VARCHAR2(10) UNIQUE
+);
+
+CREATE TABLE Venda (
+    ID_ven NUMBER PRIMARY KEY,
+    Cliente_ID_cli NUMBER,
+    Funcionario_ID_func NUMBER,
+    Valor NUMBER(10, 2),
+    Descricao VARCHAR2(255),
+    Data_venda DATE,
+    CONSTRAINT fk_cliente_venda FOREIGN KEY (Cliente_ID_cli) REFERENCES Cliente(ID_cli),
+    CONSTRAINT fk_funcionario_venda FOREIGN KEY (Funcionario_ID_func) REFERENCES Funcionario(ID_func)
+);
+
+CREATE TABLE Produto (
+    ID_pro NUMBER PRIMARY KEY,
+    Nome VARCHAR2(100) NOT NULL,
+    Descricao VARCHAR2(255),
+    Quantidade_estoque NUMBER,
+    Preco NUMBER(10, 2)
+);
+
+CREATE TABLE Fornecedor (
+    ID_for NUMBER PRIMARY KEY,
+    Nome VARCHAR2(100) NOT NULL,
+    Endereco VARCHAR2(200),
+    Cidade VARCHAR2(100),
+    Telefone VARCHAR2(20)
+);
+
+CREATE TABLE Venda_has_Produto (
+    ID_ven NUMBER,
+    ID_pro NUMBER,
+    Quantidade NUMBER,
+    CONSTRAINT fk_venda_produto FOREIGN KEY (ID_ven) REFERENCES Venda(ID_ven),
+    CONSTRAINT fk_produto_venda FOREIGN KEY (ID_pro) REFERENCES Produto(ID_pro),
+    CONSTRAINT pk_venda_produto PRIMARY KEY (ID_ven, ID_pro)
+);
+
+CREATE TABLE Produto_has_Fornecedor (
+    ID_pro NUMBER,
+    ID_for NUMBER,
+    CONSTRAINT fk_produto_fornecedor FOREIGN KEY (ID_pro) REFERENCES Produto(ID_pro),
+    CONSTRAINT fk_fornecedor_produto FOREIGN KEY (ID_for) REFERENCES Fornecedor(ID_for),
+    CONSTRAINT pk_produto_fornecedor PRIMARY KEY (ID_pro, ID_for)
+);
